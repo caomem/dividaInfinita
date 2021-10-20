@@ -14,10 +14,33 @@ def preparar_x_y_cripto(dados, tam_janela_x=100, dist_y=1):
 
     dados = np.array(dados)
     len_dados = len(dados)
+    
+    tam_vetores = len(dados) - tam_janela_x - dist_y + 1
 
-    x_vals = [0] * (len(dados) - tam_janela_x - dist_y + 1)
-    #x_vals = {i : 0 for i in range( (len(dados) - tam_janela_x - dist_y + 1) )}
-    y_vals = np.zeros(len(dados) - tam_janela_x - dist_y + 1)
+    x_vals = [0] * (tam_vetores)
+    #x_vals = {i : 0 for i in range( tam_vetores )}
+    y_vals = np.zeros(tam_vetores)
+    
+    for j in range(tam_vetores):
+        fim_janela = pos_atual_min_x + tam_janela_x
+        x_vals[j] = dados[pos_atual_min_x: fim_janela].copy()
+        y_vals[j] = np.sign(dados[fim_janela + dist_y - 1] - dados[fim_janela - 1])
+        #y_vals[j] = np.sign(dados[fim_janela + dist_y - 1] - x_vals[j][-1])[0]
+        pos_atual_min_x += 1
+    
+    return x_vals, y_vals
+    
+def preparar_x_y_cripto_OLD(dados, tam_janela_x=100, dist_y=1):
+    pos_atual_min_x = 0
+
+    dados = np.array(dados)
+    len_dados = len(dados)
+    
+    tam_vetores = len(dados) - tam_janela_x - dist_y + 1
+
+    x_vals = [0] * (tam_vetores)
+    #x_vals = {i : 0 for i in range( tam_vetores )}
+    y_vals = np.zeros(tam_vetores)
     j = 0
     while(pos_atual_min_x + tam_janela_x + dist_y - 1 < len_dados):
         fim_janela = pos_atual_min_x + tam_janela_x
